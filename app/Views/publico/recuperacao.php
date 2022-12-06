@@ -1,9 +1,6 @@
 <?= $this->extend('layouts/geral'); ?>
 <?= $this->section('secao1'); ?>
 <div class="login-box">
-    <div class="login-logo">
-        <img src="<?= base_url('assets/img/logo-sys.png') ?>" width="width" height="auto" alt="alt"/>
-    </div>
     <!-- /.login-logo -->
     <div class="card">
         <div class="card-body login-card-body shadow rounded bg-light">

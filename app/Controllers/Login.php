@@ -12,14 +12,14 @@ use App\Models\UsuarioModel;
 class Login extends BaseController {
 
     public function index() {
-        return view('geral/login');
+        return view('publico/login');
     }
 
     public function login() {
         $session = session();
         //VERIFICA SE HOUVE SUBMISSÃO DE FORMULÁRIO
         if ($this->request->getMethod() != 'post') {
-            return redirect()->to(site_url('geral/login'));
+            return redirect()->to(site_url('login'));
         } else {
             //VALIDAÇÃO DOS CAMPOS DO FORMULÁRIO
             $validacao = $this->validate([
@@ -32,12 +32,36 @@ class Login extends BaseController {
                 return redirect()->back()->withInput()->with('erro', $this->validator);
             } else {
                 echo '<script>console.log("Formulário validado com sucesso!")</script>';
-                $model = new UsuarioModel();
-                $usuario = $model->where('email', $this->request->getVar('email'))->first();
+                $usuario = new UsuarioModel();
+                //$usuario = $model->where('email', $this->request->getVar('email'))->first();
+                $fetchUsuario = $usuario->select('id, nome, email, senha')->where('email', $this->request->getPost('email'))->first();
 
-                $this->setUserSession($usuario);
-                $session->setFlashdata('success', 'Successful Registration');
-                return redirect()->to('dashboard');
+                if (!$fetchUsuario) {//SE O USUÁRIO NÃO FOR ENCONTRADO
+                    return redirect()->back()->withInput()->with('message', 'Email ou Senha não encontrados');
+                    echo '<script>console.log("Email ou Senha não encontrados")</script>';
+                } else {
+                    //VERIFICA SE A SENHA CONFERE COM A DO USUÁRIO
+                    if (!password_verify($this->request->getPost('senha'), $fetchUsuario['senha'])) {
+                        echo '<script>console.log("Senha digitada: ' . $this->request->getPost('senha') . ' não confere")</script>';
+                    } else {
+                        echo '<script>console.log("Senha correta")</script>';
+                        $this->setUserSession($fetchUsuario);
+                        session()->set([
+                            "id" => $fetchUsuario['id'],
+                            "nome" => $fetchUsuario['nome'],
+                            "email" => $fetchUsuario['email']
+                        ]);
+                        /*
+                        echo '<pre>';
+                        var_dump(session()->get()['id']);
+                        var_dump(session()->get()['nome']);
+                        var_dump(session()->get()['email']);*/
+                        return redirect()->to('dashboard');
+                    }
+                }
+
+
+                //$session->setFlashdata('success', 'Successful Registration');                
             }
         }//FIM DO ELSE
     }

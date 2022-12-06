@@ -1,13 +1,10 @@
 <?= $this->extend('layouts/geral'); ?>
 <?= $this->section('secao1'); ?>
 <div class="login-box">
-    <div class="login-logo">
-        <img src="<?= base_url('assets/img/logo-sys.png') ?>" width="width" height="auto" alt="alt"/>
-    </div>
     <!-- /.login-logo -->
     <div class="card">
         <div class="card-body login-card-body shadow rounded bg-light">
-            <h4 class="text-center mb-2">Login</h4>
+            <h2 class="text-center mb-2">Login</h2>
             <p></p>
             <form action="<?= site_url('login/login')?>" method="post">
                 <div class="input-group mb-3">

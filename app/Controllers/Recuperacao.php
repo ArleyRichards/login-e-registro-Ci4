@@ -8,6 +8,6 @@ namespace App\Controllers;
  */
 class Recuperacao extends BaseController{
     public function index(){
-        return view ('geral/recuperacao');
+        return view ('publico/recuperacao');
     }
 }

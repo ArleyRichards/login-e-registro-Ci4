@@ -1,32 +1,20 @@
-<?php 
+<?php
+
 namespace App\Models;
+
 use CodeIgniter\Model;
 
-class UsuarioModel extends Model{
-  protected $table = 'usuarios';
-  protected $allowedFields = ['nome', 'email', 'senha'];
-  protected $beforeInsert = ['beforeInsert'];
-  protected $beforeUpdate = ['beforeUpdate'];
-  
-  protected function beforeInsert(array $data){
-    $data = $this->passwordHash($data);
-    $data['data']['created_at'] = date('Y-m-d H:i:s');
+class UsuarioModel extends Model {
 
-    return $data;
-  }
+    protected $table = 'usuarios';
+    protected $allowedFields = ['nome', 'email', 'senha'];
+    protected $beforeInsert = ['beforeInsert'];
+    protected $beforeUpdate = ['beforeUpdate'];
 
-  protected function beforeUpdate(array $data){
-    $data = $this->passwordHash($data);
-    $data['data']['updated_at'] = date('Y-m-d H:i:s');
-    return $data;
-  }
-
-  protected function passwordHash(array $data){
-    if(isset($data['data']['password'])){
-      $data['data']['password'] = password_hash($data['data']['password'], PASSWORD_DEFAULT);
+    protected function beforeInsert($data) {
+        $data['data']['senha'] = password_hash($data['data']['senha'], PASSWORD_DEFAULT);
+        //var_dump($senhaEncriptada);
+        return $data;
     }
-    return $data;
-  }
-
 
 }
